@@ -1,10 +1,10 @@
 define({
 	"menu" : {
-		"menu1": "menu1",
-		"menu2": "menu2",
-		"menu3": "menu3",
-		"menu11": "menu11",
-		"menu21": "menu21",
-		"menu31": "menu31"
+		"charts": "Charts",
+		"realtime": "Realtime",
+		"preferences": "Preferences",
+		"lineChart": "Line chart",
+		"realtime1": "Realtime1",
+		"preferences1": "Preferences1"
 	}
 });

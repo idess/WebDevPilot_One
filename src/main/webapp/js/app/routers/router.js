@@ -10,7 +10,10 @@ define(function(require) {
 		frameView = new FrameView({
 			el: $('body')
 		}).render(),
-		MainRouter = require('routers/mainRouter');
+		MainRouter = require('routers/mainRouter'),
+		ChartRouter = require('routers/chartRouter'),
+		PreferenceRouter = require('routers/preferenceRouter'),
+		RealtimeRouter = require('routers/realtimeRouter');
 
 	frameView.renderMenu();
 
@@ -18,6 +21,18 @@ define(function(require) {
 		initialize: function() {
 			var mainRouter = new MainRouter();
 			mainRouter.setOptions({
+				frameView: frameView
+			});
+			var chartRouter = new ChartRouter();
+			chartRouter.setOptions({
+				frameView: frameView
+			});
+			var preferenceRouter = new PreferenceRouter();
+			preferenceRouter.setOptions({
+				frameView: frameView
+			});
+			var realtimeRouter = new RealtimeRouter();
+			realtimeRouter.setOptions({
 				frameView: frameView
 			});
 		},

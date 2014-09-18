@@ -2,12 +2,12 @@
 define({
 	"root" : {
 		"menu" : {
-			"menu1": "메뉴1",
-			"menu2": "메뉴2",
-			"menu3": "메뉴3",
-			"menu11": "메뉴11",
-			"menu21": "메뉴21",
-			"menu31": "메뉴31"
+			"charts": "차트",
+			"realtime": "실시간",
+			"preferences": "환경설정",
+			"lineChart": "라인차트",
+			"realtime1": "실시간1",
+			"preference1": "환경설정1"
 		}
 	},
 	"en-us" : true

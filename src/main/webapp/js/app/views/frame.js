@@ -19,29 +19,29 @@ define(function(require) {
 		events: {},
 		renderMenu: function() {
 			var menus = [{
-				"menukey": "menu1",
+				"menukey": "charts",
 				"higherkey": "",
 				"url": ""
 			}, {
-				"menukey": "menu2",
+				"menukey": "realtime",
 				"higherkey": "",
 				"url": ""
 			}, {
-				"menukey": "menu3",
+				"menukey": "preferences",
 				"higherkey": "",
 				"url": ""
 			}, {
-				"menukey": "menu11",
-				"higherkey": "menu1",
-				"url": "menu11"
+				"menukey": "lineChart",
+				"higherkey": "charts",
+				"url": "lineChart"
 			}, {
-				"menukey": "menu21",
-				"higherkey": "menu2",
-				"url": "menu21"
+				"menukey": "realtime1",
+				"higherkey": "realtime",
+				"url": "realtime1"
 			}, {
-				"menukey": "menu31",
-				"higherkey": "menu3",
-				"url": "menu31"
+				"menukey": "preference1",
+				"higherkey": "preferences",
+				"url": "preference1"
 			}];
 			var menuView = new MenuView({
 				collection: menus
