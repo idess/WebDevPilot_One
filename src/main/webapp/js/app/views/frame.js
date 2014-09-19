@@ -9,6 +9,8 @@ define(function(require) {
 		tpl = require('text!tpl/frame.html'),
 		template = _.template(tpl),
 		$menuItems;
+	
+	var currentContainer;
 
 	return Backbone.View.extend({
 		initialize: function() {},
@@ -63,6 +65,17 @@ define(function(require) {
 			$menuItems.removeClass('active');
 			if (menuItem) {
 				$('.' + menuItem + '-menu').addClass('active');
+			}
+		},
+		setCurrentContainer: function(currentView) {
+			currentContainer = currentView;
+		},
+		getCurrentContainer: function() {
+			return currentContainer;
+		},
+		closeCurrentContainer: function() {
+			if (currentContainer) {
+				currentContainer.close();
 			}
 		}
 

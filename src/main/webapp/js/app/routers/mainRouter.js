@@ -17,11 +17,12 @@ define(function(require) {
 			frameView = options.frameView;
 		},
 		dashboard: function() {
+			frameView.closeCurrentContainer();
 			console.log("dashboard");
 			require(['views/dashboard'], function(Dashboard) {
-				var dashboard = new Dashboard({
-					el: $('#container', frameView.el)
-				}).render();
+				var dashboard = new Dashboard().render();
+				$('#container', frameView.el).append(dashboard.el);
+				frameView.setCurrentContainer(dashboard);
 			});
 			frameView.selectMenuItem('');
 		}

@@ -16,10 +16,6 @@ define(function(require, d3) {
 
 	return Backbone.View.extend({
 		render: function() {
-			this.$el.empty();
-			this.$el.removeClass();
-			this.$el.addClass('container-fluid');
-
 			this.$el.html(template());
 
 			// area chart
