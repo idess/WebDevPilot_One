@@ -35,6 +35,17 @@ require.config({
 		'bootstrap': {
 			deps: ['jquery'],
 			exports: 'bootstrap'
+		},
+		'd3': {
+			exports: 'd3'
+		},
+		'epoch.min': {
+			deps: ['d3'],
+			exports: 'Epoch'
+		},
+		'nv.d3.min': {
+			deps: ['d3'],
+			exports: 'nv'
 		}
 	}
 });
