@@ -16,7 +16,13 @@ define(function(require) {
 			frameView = options.frameView;
 		},
 		realtime1: function() {
+			frameView.closeCurrentContainer();
 			console.log("realtime1");
+			require(['views/realtime/realtimeUsingSockjs'], function(Realtime) {
+				var realtime = new Realtime().render();
+				$('#container', frameView.el).append(realtime.el);
+				frameView.setCurrentContainer(realtime);
+			});
 			frameView.selectMenuItem('realtime');
 		}
 	});
