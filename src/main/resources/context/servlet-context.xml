@@ -25,11 +25,11 @@
 	</beans:bean>
 
 	<!-- scan validator -->
-	<context:component-scan base-package="com.kglory.web.model.validation" />
+	<context:component-scan base-package="com.kglory.tms.web.model.validation" />
 	<!-- scan service -->
-	<context:component-scan base-package="com.kglory.web.services" />
+	<context:component-scan base-package="com.kglory.tms.web.services" />
 	<!-- scan controller -->
-	<context:component-scan base-package="com.kglory.web.controller" />
+	<context:component-scan base-package="com.kglory.tms.web.controller" />
 	
 
 	<!-- define json converter -->
