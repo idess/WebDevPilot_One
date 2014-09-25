@@ -17,13 +17,6 @@ require.config({
 	// Set the config for the i18n
 	// locale : "en-us",
 
-	map: {
-		'*': {
-			'epoch': 'epoch.min',
-			'nv': 'nv.d3.min'
-		}
-	},
-
 	shim: {
 		'underscore': {
 			exports: '_'
@@ -38,10 +31,6 @@ require.config({
 		},
 		'd3': {
 			exports: 'd3'
-		},
-		'epoch.min': {
-			deps: ['d3'],
-			exports: 'Epoch'
 		},
 		'nv.d3.min': {
 			deps: ['d3'],
