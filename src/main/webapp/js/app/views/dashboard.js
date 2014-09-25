@@ -44,9 +44,7 @@ define(function(require, d3) {
 					y: Math.pow(x2, (1 / 4))
 				});
 			}
-			$('#area').css({
-				'height': '300px'
-			});
+			$('#area svg', this.el).css("height", "300px");
 			nv.addGraph(function() {
 				var chart = nv.models.stackedAreaChart().margin({
 						left: 100
@@ -105,9 +103,7 @@ define(function(require, d3) {
 				});
 			}
 
-			$('#line').css({
-				'height': '300px'
-			});
+			$('#line svg', this.el).css("height", "300px");
 			nv.addGraph(function() {
 				var chart = nv.models.lineChart().margin({
 						left: 100
@@ -157,9 +153,7 @@ define(function(require, d3) {
 				}
 			}
 
-			$('#bubble').css({
-				'height': '300px'
-			});
+			$('#bubble svg', this.el).css("height", "300px");
 			nv.addGraph(function() {
 				var chart = nv.models.scatterChart().showDistX(true) // showDist, when true, will
 					// display those little
