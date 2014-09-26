@@ -28,7 +28,7 @@
 	</logger>
 	
 	<!-- Application Loggers -->
-	<logger name="com.kglory.tms.web">
+	<logger name="me.idess.web">
 		<level value="debug" />
 	</logger>
 

@@ -39,7 +39,7 @@
 	<!-- filter -->
 	<filter>
 		<filter-name>webAuthFilter</filter-name>
-		<filter-class>com.kglory.tms.web.filter.WebAuthFilter</filter-class>
+		<filter-class>me.idess.web.filter.WebAuthFilter</filter-class>
 		<async-supported>true</async-supported>
 		<init-param>
 			<param-name>encoding</param-name>

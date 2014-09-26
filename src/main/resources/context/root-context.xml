@@ -30,12 +30,12 @@
 	<!-- define the SqlSessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="typeAliasesPackage" value="com.kglory.tms.web.model.vo" />
+		<property name="typeAliasesPackage" value="me.idess.web.model.vo" />
 	</bean>
 
 	<!-- scan for mappers and let them be autowired -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.kglory.tms.web.mapper" />
+		<property name="basePackage" value="me.idess.web.mapper" />
 	</bean>
 
 	<!-- Application Message Bundle -->
