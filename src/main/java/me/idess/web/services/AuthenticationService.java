@@ -54,4 +54,15 @@ public class AuthenticationService {
 		}
 	}
 	
+	public void logout(HttpSession session) throws BaseException {
+		try {
+			session.removeAttribute("Username");
+			session.removeAttribute("Token");
+			// TODO 로그아웃 감사로그
+		} catch (Exception e) {
+			logger.error("(errorCode)" + e.getLocalizedMessage());
+			throw new BaseException(messageSource, "logout.fail", null, "", e);
+		}
+	}
+	
 }

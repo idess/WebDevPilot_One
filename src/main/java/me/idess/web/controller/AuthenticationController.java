@@ -90,6 +90,28 @@ public class AuthenticationController {
 		return dto;
 	}
 	
+	@RequestMapping(value = "/api/logout", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonBean logout(HttpSession session) {
+		CommonBean commonBean = new CommonBean();
+		try {
+			authenticationService.logout(session);
+			commonBean.setReturnType(ReturnType.success);
+			commonBean.setErrorCode("");
+			commonBean.setErrorMessage("");
+		} catch (BaseException e) {
+			// Service등에서 알 수 있는 메시지 발생
+			logger.error(e.getLocalizedMessage(), e);
+			commonBean = e.getErrorBean(commonBean);
+		} catch (Exception e) {
+			// 알수 없는 에러 발생
+			logger.error(e.getLocalizedMessage(), e);
+			commonBean = new BaseException(messageSource, "errorCode", null, "", e)
+					.getErrorBean(commonBean);
+		}
+		return commonBean;
+	}
+	
 	@RequestMapping(value = "/requireLogin", method = RequestMethod.POST)
 	@ResponseBody
 	public LoginStatusDto requireLogin(HttpSession session) {

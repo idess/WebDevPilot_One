@@ -6,10 +6,11 @@ define(function(require) {
 		_ = require('underscore'),
 		Backbone = require('backbone'),
 		MenuView = require('views/common/menu'),
+		CommonModel = require('models/common'),
 		tpl = require('text!tpl/frame.html'),
 		template = _.template(tpl),
 		$menuItems;
-	
+
 	var currentContainer;
 
 	return Backbone.View.extend({
@@ -18,7 +19,19 @@ define(function(require) {
 			this.$el.html(template());
 			return this;
 		},
-		events: {},
+		events: {
+			"click .logout": "logout"
+		},
+		logout: function() {
+			var common = new CommonModel();
+			common.fetch({
+				async: false,
+				method: 'POST',
+				contentType: 'application/json',
+				url: 'api/logout'
+			});
+			location.href = '/';
+		},
 		renderMenu: function() {
 			var menus = [{
 				"menukey": "charts",
