@@ -8,15 +8,12 @@ define(function(require) {
 	// require library
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		Backbone = require('backbone'),
-		bootstrap = require('bootstrap');
-
-	// require template
-	var tpl = require('text!tpl/common/alert.html');
+		Backbone = require('backbone');
 
 	var AlertView = Backbone.View.extend({
+		className: 'header-alert',
 		alerts: ['success', 'error', 'warning', 'info'],
-		template: _.template(tpl),
+		template: _.template('<span class="alert-wrap"><%= message %></span><button type="button" data-dismiss="alert" class="close alert-close">X</button>'),
 
 		/**
 		 * @param {String}
@@ -35,19 +32,27 @@ define(function(require) {
 			this.alert = alert;
 			this.message = message;
 		},
+		events: {
+			"click .alert-close": "onClose"
+		},
 		render: function() {
 			var output = this.template({
-				alert: this.alert,
 				message: this.message
 			});
-			this.$el.addClass('alert-' + this.alert).html(output).alert();
+			this.$el.html(output);
+			this.$el.addClass(this.alert);
+			this.$el.css('display', 'block');
 			return this;
+		},
+		onClose: function() {
+			this.unbind();
+			this.remove();
 		}
 	});
 
 	AlertView.msg = function($el, options) {
-		var alert = new AlertView(options);
-		$el.html(alert.render().el);
+		var alert = new AlertView(options).render();
+		$el.html(alert.el);
 		return alert;
 	};
 
