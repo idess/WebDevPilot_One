@@ -17,6 +17,8 @@ define(function(require) {
 	var locale = require('i18n!nls/str');
 
 	var ModalView = Backbone.View.extend({
+		types: ['info', 'search', 'chart'],
+		sizes: ['large', 'medium-large', 'small'],
 		className: "modal backbone-modal",
 		template: _.template(tpl),
 		buttonTemplate: _
@@ -24,10 +26,13 @@ define(function(require) {
 		buttonDefaults: {
 			className: "",
 			label: "",
+			okButtonCallback: "",
 			close: false
 		},
 		defaults: {
-			title: "Info",
+			type: 'info',
+			size: 'large',
+			title: "",
 			backdrop: true,
 			body: "",
 			buttons: [{
@@ -38,6 +43,17 @@ define(function(require) {
 		},
 		initialize: function(options) {
 			options || (options = {});
+			var type = options.type || 'info';
+			var size = options.size || 'large';
+
+			if (_.indexOf(this.types, type) === -1) {
+				throw new Error('Invalid type: [' + type + '] Must be one of: ' + this.types.join(', '));
+			}
+			
+			if (_.indexOf(this.sizes, size) === -1) {
+				throw new Error('Invalid size: [' + size + '] Must be one of: ' + this.sizes.join(', '));
+			}
+
 			_.defaults(this, this.defaults);
 			_.extend(this, _.pick(options, _.keys(this.defaults)));
 			_.bindAll(this, "close");
@@ -46,6 +62,7 @@ define(function(require) {
 			var view = this;
 
 			this.$el.html(this.template({
+				type: this.type,
 				title: this.title,
 				body: this.body
 			}));
@@ -53,12 +70,41 @@ define(function(require) {
 			this.$body = this.$el.find('.modal-body');
 			this.$footer = this.$el.find('.modal-footer');
 
+			switch (this.size) {
+				case 'large':
+					$('.modal-dialog', this.el).addClass('modal-lg');
+					break;
+				case 'medium-large':
+					$('.modal-dialog', this.el).addClass('modal-ml');
+					break;
+				case 'small':
+					$('.modal-dialog', this.el).addClass('modal-sm');
+					break;
+				default:
+					$('.modal-dialog', this.el).addClass('modal-lg');
+					break;
+			}
+
+			//Insert the main content if it's a view
+			if (this.body && this.body.$el) {
+				this.$el.find('.modal-body').html(this.body.$el);
+				this.body.render();
+			}
+
 			_.each(this.buttons, function(button) {
 				_.defaults(button, view.buttonDefaults);
 				var $button = $(view.buttonTemplate(button));
 				view.$footer.append($button);
-				if (button.close)
-					$button.on("click", view.close);
+				var result = true;
+				if (button.okButtonCallback) {
+					if (_.isFunction(button.okButtonCallback)) $button.on("click", function(e) {
+						result = button.okButtonCallback.apply(this, arguments);
+						if (!result) {
+							e.stopImmediatePropagation();
+						}
+					});
+				}
+				if (button.close) $button.on("click", view.close);
 			});
 
 			this.$el.modal({
@@ -66,7 +112,7 @@ define(function(require) {
 				backdrop: this.backdrop
 			});
 
-			this.$header.find("a.close").click(view.close);
+			this.$header.find(".close").click(view.close);
 
 			if (this.backdrop === true) {
 				$('.modal-backdrop').off().click(view.close);
@@ -79,7 +125,7 @@ define(function(require) {
 		postRender: function() {
 			return this;
 		},
-		close: function(e) {
+		onClose: function(e) {
 			if (e)
 				e.preventDefault();
 			var view = this;
@@ -88,11 +134,18 @@ define(function(require) {
 				view.$el.modal("hide");
 				view.remove();
 			}, 25);
+			if (this.body && this.body.$el) {
+				this.body.close();
+			}
+			$('body').removeClass('modal-open');
+			$('body').removeAttr("style");
 		}
 	});
 
 	ModalView.msg = function(options) {
 		var modal = new Backbone.ModalView({
+			type: options.type,
+			size: options.size,
 			title: options.title,
 			body: options.body
 		}).render();
@@ -101,11 +154,14 @@ define(function(require) {
 
 	ModalView.msgWithOkBtn = function(options) {
 		var modal = new Backbone.ModalView({
+			type: options.type,
+			size: options.size,
 			title: options.title,
 			body: options.body,
 			buttons: [{
 				className: "btn-info",
 				label: locale.ok,
+				okButtonCallback: options.okButtonCallback,
 				close: true
 			}]
 		}).render();
@@ -114,11 +170,14 @@ define(function(require) {
 
 	ModalView.msgWithOkCancelBtn = function(options) {
 		var modal = new Backbone.ModalView({
+			type: options.type,
+			size: options.size,
 			title: options.title,
 			body: options.body,
 			buttons: [{
 				className: "btn-info",
 				label: locale.ok,
+				okButtonCallback: options.okButtonCallback,
 				close: true
 			}, {
 				className: "btn-default",
