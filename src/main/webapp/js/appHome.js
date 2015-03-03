@@ -42,9 +42,5 @@ require.config({
 require(['jquery', '../app', 'utils/sessionManager', 'routers/router'],
 	function($, app, sessionManager, router) {
 		app.initialize();
-
-		$.when(sessionManager.requireLogin()).done(function() {
-			var authCredential = sessionManager.getAuthCredentials();
-			authCredential === true ? (router.initialize(), router.initHistoryApi()) : location.href = '/';
-		});
+		sessionManager.isLogin ? (router.initialize(), router.initHistoryApi()) : location.href = '/';
 	});

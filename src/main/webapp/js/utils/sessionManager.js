@@ -4,27 +4,21 @@ define(function(require) {
 
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		Backbone = require('backbone');
+		Backbone = require('backbone'),
+		LoginStatusModel = require('models/loginStatus');
 
-	var LoginInfoModel = Backbone.Model.extend({
-		defaults: {
-			"loginYN": false
-		},
-		url: "requireLogin"
+	var loginStatusModel = new LoginStatusModel();
+	loginStatusModel.fetch({
+		url: "requireLogin",
+		async: false,
+		method: 'POST',
+		contentType: 'application/json'
 	});
 
-	var loginInfoModel = new LoginInfoModel();
-
 	return {
-		requireLogin: function() {
-			loginInfoModel.fetch({
-				async: false,
-				method: 'POST',
-				contentType: 'application/json'
-			});
-		},
-		getAuthCredentials: function() {
-			return loginInfoModel.get('loginYN');
-		}
+		UserName: loginStatusModel.get('userName'),
+		LoginDate: loginStatusModel.get('loginDate'),
+		isLogin: loginStatusModel.get('loginYN'),
+		isController: loginStatusModel.get('controller')
 	};
 });

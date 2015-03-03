@@ -39,14 +39,9 @@ require.config({
 	}
 });
 
-require(['jquery', '../app', 'utils/sessionManager', 'views/login'],
-	function($, app, sessionManager, LoginView) {
-		app.initialize();
-
-		$.when(sessionManager.requireLogin()).done(function() {
-			var authCredential = sessionManager.getAuthCredentials();
-			authCredential ? location.href = 'home.html#dashboard' : new LoginView({
-				el: $('body')
-			});
-		});;
+require(['jquery', 'utils/sessionManager', 'views/login'],
+	function($, sessionManager, LoginView) {
+		sessionManager.isLogin ? location.href = 'home.html#dashboard' : new LoginView({
+			el: $('body')
+		});
 	});
