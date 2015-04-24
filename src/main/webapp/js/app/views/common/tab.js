@@ -12,13 +12,21 @@ define(function(require) {
 
 	var TabHeaderView = Backbone.View.extend({
 		tagName: 'li',
-		template: _.template('<span><a href="#<%= key %>" role="tab" data-toggle="tab"><%= title %><button type="button" class="closetab icon-tab-btn"></button></a></span>'),
+		template: _.template('<span><a href="#<%= key %>" role="tab" data-toggle="tab"><%= title %></a></span>'),
+		closeButtonTemplate: _.template('<button type="button" class="closetab icon-tab-btn"></button>'),
 		initialize: function(options) {
 			options = options || {};
 			this.tabInfo = options.tabInfo || {};
+			this.removable = options.removable;
+			if (this.removable == undefined) {
+				this.removable = true;
+			}
 		},
 		render: function() {
 			this.$el.html(this.template(this.tabInfo));
+
+			if (this.removable) $('a', this.el).append(this.closeButtonTemplate());
+			return this;
 		}
 	});
 
@@ -37,8 +45,8 @@ define(function(require) {
 			this.tabs = [];
 
 			if (options.newTab) {
-				this.newTabFlag = options.newTab,
-					this.ContentType = options.ContentType;
+				this.newTabFlag = options.newTab;
+				this.ContentType = options.ContentType;
 			}
 		},
 		template: _.template(tabTpl),
@@ -55,10 +63,11 @@ define(function(require) {
 
 			return this;
 		},
-		addTab: function(tab) {
+		addTab: function(tab, removable) {
 			var newTab = new TabHeaderView({
 				parent: this,
-				tabInfo: tab.getInfo()
+				tabInfo: tab.getInfo(),
+				removable: removable
 			});
 
 			if (this.newTabFlag) {
@@ -78,13 +87,17 @@ define(function(require) {
 			});
 			this.showTab(this.tabs.length - 1);
 		},
-		plusTab: function(e) {
+		plusTab: function(e, condition) {
 			e.stopPropagation();
+			var content = null;
 			if (this.newTabFlag) {
-				this.addTab(new this.ContentType({
-					tabView: this
-				}));
+				content = new this.ContentType({
+					tabView: this,
+					condition: condition
+				});
+				this.addTab(content);
 			}
+			return content;
 		},
 		/**
 		 * 탭을 활성화하는 함수
