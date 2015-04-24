@@ -8,7 +8,8 @@ define(function(require) {
 	// require library
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		Backbone = require('backbone');
+		Backbone = require('backbone'),
+		Bootstrap = require('bootstrap');
 
 	// require template
 	var tpl = require('text!tpl/common/modal.html');
@@ -20,6 +21,9 @@ define(function(require) {
 		types: ['info', 'search', 'chart'],
 		sizes: ['large', 'medium-large', 'small'],
 		className: "modal backbone-modal",
+		events: {
+			"hidden.bs.modal": "close"
+		},
 		template: _.template(tpl),
 		buttonTemplate: _
 			.template('<button type="button" class="btn <%=className%>"><%=label%></button>'),
@@ -49,7 +53,7 @@ define(function(require) {
 			if (_.indexOf(this.types, type) === -1) {
 				throw new Error('Invalid type: [' + type + '] Must be one of: ' + this.types.join(', '));
 			}
-			
+
 			if (_.indexOf(this.sizes, size) === -1) {
 				throw new Error('Invalid size: [' + size + '] Must be one of: ' + this.sizes.join(', '));
 			}
@@ -95,11 +99,10 @@ define(function(require) {
 				_.defaults(button, view.buttonDefaults);
 				var $button = $(view.buttonTemplate(button));
 				view.$footer.append($button);
-				var result = true;
 				if (button.okButtonCallback) {
 					if (_.isFunction(button.okButtonCallback)) $button.on("click", function(e) {
-						result = button.okButtonCallback.apply(this, arguments);
-						if (!result) {
+						var result = button.okButtonCallback.apply(this, arguments);
+						if (result == false) {
 							e.stopImmediatePropagation();
 						}
 					});
@@ -115,7 +118,7 @@ define(function(require) {
 			this.$header.find(".close").click(view.close);
 
 			if (this.backdrop === true) {
-				$('.modal-backdrop').off().click(view.close);
+				$('.modal-backdrop').click(view.close);
 			}
 
 			this.postRender();
@@ -128,17 +131,12 @@ define(function(require) {
 		onClose: function(e) {
 			if (e)
 				e.preventDefault();
-			var view = this;
-			this.trigger("close", this);
-			setTimeout(function() {
-				view.$el.modal("hide");
-				view.remove();
-			}, 25);
 			if (this.body && this.body.$el) {
 				this.body.close();
 			}
 			$('body').removeClass('modal-open');
 			$('body').removeAttr("style");
+			$('.modal-backdrop').remove();
 		}
 	});
 
