@@ -11,9 +11,9 @@
 		<java-version>1.8</java-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<org.springframework-version>4.1.0.RELEASE</org.springframework-version>
-		<org.aspectj-version>1.8.2</org.aspectj-version>
-		<org.slf4j-version>1.7.7</org.slf4j-version>
+		<org.springframework-version>4.1.6.RELEASE</org.springframework-version>
+		<org.aspectj-version>1.8.5</org.aspectj-version>
+		<org.slf4j-version>1.7.12</org.slf4j-version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.9</version>
+			<version>1.10</version>
 		</dependency>
 
 		<!-- AspectJ -->
@@ -84,17 +84,17 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.4.2</version>
+			<version>2.5.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.4.2</version>
+			<version>2.5.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
+			<version>3.4</version>
 		</dependency>
 
 		<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> 
@@ -109,7 +109,7 @@
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
-			<version>3.2.7</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -119,14 +119,14 @@
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
-			<version>1.1.7</version>
+			<version>1.1.8</version>
 		</dependency>
 
 		<!-- mongodb -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>2.12.3</version>
+			<version>3.0.1</version>
 		</dependency>
 
 		<!-- Logging -->
@@ -150,7 +150,7 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.0.2</version>
+			<version>2.3</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.mail</groupId>
@@ -200,7 +200,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -224,10 +224,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.3</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
@@ -236,7 +236,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
+				<version>1.4.0</version>
 				<configuration>
 					<mainClass>org.test.int1.Main</mainClass>
 				</configuration>

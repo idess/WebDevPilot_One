@@ -1,5 +1,5 @@
 /**
- * @license RequireJS i18n 2.0.4 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
+ * @license RequireJS i18n 2.0.5 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/requirejs/i18n for details
  */
@@ -89,7 +89,7 @@
         var masterConfig = module.config ? module.config() : {};
 
         return {
-            version: '2.0.4',
+            version: '2.0.5',
             /**
              * Called when a dependency needs to be loaded.
              */
@@ -125,7 +125,8 @@
                     if (!locale) {
                         locale = masterConfig.locale =
                             typeof navigator === "undefined" ? "root" :
-                            (navigator.language ||
+                            ((navigator.languages && navigator.languages[0]) ||
+                             navigator.language ||
                              navigator.userLanguage || "root").toLowerCase();
                     }
                     parts = locale.split("-");
