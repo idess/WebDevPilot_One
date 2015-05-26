@@ -31,38 +31,45 @@ public class WebAuthFilter implements Filter {
 	}
 	
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
+			ServletException {
 		try {
 			HttpServletRequest httpRequest = (HttpServletRequest) request;
 			HttpServletResponse httpResponse = (HttpServletResponse) response;
 			HttpSession session = httpRequest.getSession();
 			String uri = httpRequest.getRequestURI();
 			
+			releaseCotroller();
+			
 			// Script files, style files, image files is not filter.
-			if (uri.contains(".js") || uri.contains(".css") || uri.contains(".gif")
-					|| uri.contains(".png") || uri.contains(".jpg") || uri.contains(".html")) {
+			if (uri.contains(".js") || uri.contains(".css") || uri.contains(".gif") || uri.contains(".png")
+					|| uri.contains(".jpg") || uri.contains(".html")) {
 				filterChain.doFilter(httpRequest, httpResponse);
 				return;
 			}
 			
 			// Remove a session when you go to the login page and the session expired page.
-			if (uri.equals("/") || uri.equals("/index.html") || uri.equals("/sessionExpire.html")) {
+			if (uri.equals("/") || uri.equals("/index.html") || uri.equals("/expire.html")) {
 				logger.debug("############### 세션 제거 #################");
-				session.removeAttribute("Token");
 				session.removeAttribute("Username");
+				session.removeAttribute("Token");
+				session.removeAttribute("LocalAddr");
+				session.removeAttribute("RemoteAddr");
+				session.removeAttribute("LoginDate");
+				session.removeAttribute("RoleNo");
 			}
 			
 			// login validation
-			logger.debug(uri + " session id: " + session.getId() + " session token: "
-					+ session.getAttribute("Token") + " session user: "
-					+ session.getAttribute("Username"));
+			logger.debug(uri + " session id: " + session.getId() + " session token: " + session.getAttribute("Token")
+					+ " session user: " + session.getAttribute("Username"));
 			Object sessionToken = session.getAttribute("Token");
 			if (sessionToken == null) {
 				logger.debug("Unauthorized user");
 				if (uri.equals(loginUri)) {
 					logger.debug("Login process");
 					filterChain.doFilter(httpRequest, httpResponse);
+					session.setAttribute("LocalAddr", httpRequest.getLocalAddr());
+					session.setAttribute("RemoteAddr", httpRequest.getRemoteAddr());
 				} else {
 					logger.debug("Session is null or abnormal url access");
 					passRequest(response, httpResponse);
@@ -70,8 +77,7 @@ public class WebAuthFilter implements Filter {
 			} else {
 				logger.debug("Authorized user");
 				// token validation
-				String tokenObjectToken = TokenObject.getToken((String) session
-						.getAttribute("Username"));
+				String tokenObjectToken = TokenObject.getToken((String) session.getAttribute("Username"));
 				if (tokenObjectToken != null && tokenObjectToken.equals(sessionToken)) {
 					logger.debug("Valid Token");
 					filterChain.doFilter(httpRequest, httpResponse);
@@ -79,11 +85,17 @@ public class WebAuthFilter implements Filter {
 					logger.debug("Invalid Token or duplicate login");
 					
 					// Deletes the previously recorded sign.
-					session.removeAttribute("Token");
 					session.removeAttribute("Username");
+					session.removeAttribute("Token");
+					session.removeAttribute("LocalAddr");
+					session.removeAttribute("RemoteAddr");
+					session.removeAttribute("LoginDate");
+					session.removeAttribute("RoleNo");
 					
 					if (uri.equals(loginUri)) {
 						filterChain.doFilter(httpRequest, httpResponse);
+						session.setAttribute("LocalAddr", httpRequest.getLocalAddr());
+						session.setAttribute("RemoteAddr", httpRequest.getRemoteAddr());
 					} else {
 						passRequest(response, httpResponse);
 					}
@@ -94,8 +106,19 @@ public class WebAuthFilter implements Filter {
 		}
 	}
 	
-	private void passRequest(ServletResponse response, HttpServletResponse httpResponse)
-			throws IOException {
+	private void releaseCotroller() {
+		String controller = SessionObject.getController();
+		if (controller != null && !controller.isEmpty()) {
+			HttpSession session = SessionObject.getSession(controller);
+			try {
+				session.getCreationTime();
+			} catch (IllegalStateException e) {
+				SessionObject.setController("");
+			}
+		}
+	}
+	
+	private void passRequest(ServletResponse response, HttpServletResponse httpResponse) throws IOException {
 		String str = "location.href='/';";
 		httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		httpResponse.setContentType("text/html; charset=UTF-8");
