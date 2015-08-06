@@ -1,6 +1,3 @@
-/**
- * Alert View
- */
 define(function(require) {
 
 	"use strict";
@@ -10,49 +7,85 @@ define(function(require) {
 		_ = require('underscore'),
 		Backbone = require('backbone');
 
+	var topSize = 70,
+		boxInterval = 20;
+
 	var AlertView = Backbone.View.extend({
-		className: 'header-alert',
-		alerts: ['success', 'error', 'warning', 'info'],
-		template: _.template('<span class="alert-wrap"><%= message %></span><button type="button" data-dismiss="alert" class="close alert-close">X</button>'),
-
-		/**
-		 * @param {String}
-		 *            [options.alert] alert. Default: none
-		 * @param {String}
-		 *            [options.message] message. Default: none
-		 */
+		tagName: "div",
+		className: "alert alert-dismissible fade",
+		template: ['<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
+			'<div class="glyphicon" aria-hidden="true"></div>',
+			'<div class="sr-only"><%= title %></div>',
+			'<div class="message"><%= message %></div>'
+		].join("\n"),
 		initialize: function(options) {
-			var message = options.message || '';
-			var alert = options.hasOwnProperty('alert') ? options.alert : 'info';
-
-			if (_.indexOf(this.alerts, alert) === -1) {
-				throw new Error('Invalid alert: [' + alert + '] Must be one of: ' + this.alerts.join(', '));
+			_.bindAll(this, "render", "remove");
+			this.template = _.template(this.template);
+			if (options) {
+				this.alert = options.alert || "info";
+				this.title = options.title || "";
+				this.message = options.message || "";
+				this.fixed = options.fixed || false;
 			}
-
-			this.alert = alert;
-			this.message = message;
-		},
-		events: {
-			"click .alert-close": "onClose"
 		},
 		render: function() {
-			var output = this.template({
+			var self = this;
+			this.$el.addClass("alert-" + this.alert).html(this.template({
+				title: this.title,
 				message: this.message
-			});
-			this.$el.html(output);
-			this.$el.addClass(this.alert);
-			this.$el.css('display', 'block');
+			})).alert();
+			this.$el.attr('role', 'alert');
+
+			if (this.alert === 'success') this.$('.glyphicon').addClass('glyphicon-ok-sign');
+			else if (this.alert === 'warning') this.$('.glyphicon').addClass('glyphicon-minus-sign');
+			else if (this.alert === 'danger') this.$('.glyphicon').addClass('glyphicon-exclamation-sign');
+			else this.$('.glyphicon').addClass('glyphicon-info-sign');
+
+			if (this.fixed) {
+				this.$el.addClass("alert-fixed");
+			}
+			window.setTimeout(function() {
+				self.$el.addClass("in");
+			}, 20);
 			return this;
 		},
-		onClose: function() {
-			this.unbind();
-			this.remove();
+		remove: function() {
+			var self = this;
+			this.$el.removeClass("in");
+			window.setTimeout(function() {
+				self.$el.remove();
+			}, 1000);
 		}
 	});
 
-	AlertView.msg = function($el, options) {
-		var alert = new AlertView(options).render();
-		$el.html(alert.el);
+	/**
+	 * Create Alert View and show
+	 * @param title alert title
+	 * @param message alert message
+	 * @param alertType alert type(success, info, warning, danger), default: info
+	 * @returns {AlertView}
+	 */
+	AlertView.show = function(title, message, alertType) {
+		var $alertbox = $('.alert-container');
+		if ($alertbox.length === 0) {
+			var $alertbox = $(document.createElement('div'));
+			$alertbox.addClass('alert-container');
+			$(document.body).append($alertbox);
+		}
+
+		var alert = new AlertView({
+			alert: alertType,
+			title: title,
+			message: message,
+			fixed: true
+		});
+
+		$alertbox.prepend(alert.render().el);
+
+		window.setTimeout(function() {
+			alert.remove();
+		}, 8000);
+
 		return alert;
 	};
 
